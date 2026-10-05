@@ -4,6 +4,8 @@ function ProjectDetailUI({
 }) {
   if (!project) return null
 
+  const isMobile = typeof window !== 'undefined' && window.innerWidth <= 700
+
   return (
     <div
       style={{
@@ -15,7 +17,7 @@ function ProjectDetailUI({
         alignItems: 'center',
         justifyContent: 'center',
 
-        padding: '40px',
+        padding: isMobile ? '12px' : '40px',
         boxSizing: 'border-box',
 
         background: 'rgba(2, 8, 23, 0.82)',
@@ -31,16 +33,16 @@ function ProjectDetailUI({
 
       <div
         style={{
-          width: 'min(1000px, 100%)',
-          maxHeight: 'calc(100vh - 80px)',
+          width: isMobile ? 'calc(100% - 0px)' : 'min(1000px, 100%)',
+          maxHeight: isMobile ? 'calc(100dvh - 24px)' : 'calc(100vh - 80px)',
 
           overflowY: 'auto',
 
           boxSizing: 'border-box',
 
-          padding: '42px',
+          padding: isMobile ? '28px' : '42px',
 
-          borderRadius: '24px',
+          borderRadius: isMobile ? '16px' : '24px',
 
           background:
             'linear-gradient(145deg, #101f3d, #081329)',
@@ -65,21 +67,22 @@ function ProjectDetailUI({
             justifyContent: 'space-between',
             alignItems: 'flex-start',
 
-            gap: '30px',
+            gap: isMobile ? '16px' : '30px',
 
-            marginBottom: '30px',
+            marginBottom: isMobile ? '20px' : '30px',
+            flexWrap: isMobile ? 'wrap' : 'nowrap',
           }}
         >
 
-          <div>
+          <div style={{ flex: 1, minWidth: 0 }}>
 
             <div
               style={{
-                marginBottom: '10px',
+                marginBottom: '8px',
 
                 color: '#60a5fa',
 
-                fontSize: '13px',
+                fontSize: isMobile ? '11px' : '13px',
                 fontWeight: 800,
 
                 letterSpacing: '0.16em',
@@ -96,8 +99,9 @@ function ProjectDetailUI({
 
                 color: '#ffffff',
 
-                fontSize:
-                  'clamp(40px, 6vw, 64px)',
+                fontSize: isMobile
+                  ? 'clamp(24px, 5.5vw, 40px)'
+                  : 'clamp(40px, 6vw, 64px)',
 
                 lineHeight: 1,
 
@@ -128,24 +132,25 @@ function ProjectDetailUI({
             style={{
               flexShrink: 0,
 
-              padding: '11px 18px',
+              padding: isMobile ? '8px 12px' : '11px 18px',
 
               border:
                 '1px solid rgba(96, 165, 250, 0.35)',
 
-              borderRadius: '10px',
+              borderRadius: isMobile ? '8px' : '10px',
 
               background:
                 'rgba(37, 99, 235, 0.12)',
 
               color: '#bfdbfe',
 
-              fontSize: '12px',
+              fontSize: isMobile ? '10px' : '12px',
               fontWeight: 800,
 
               letterSpacing: '0.1em',
 
               cursor: 'pointer',
+              whiteSpace: 'nowrap',
             }}
           >
             BACK
@@ -161,13 +166,13 @@ function ProjectDetailUI({
           style={{
             width: '100%',
 
-            aspectRatio: '16 / 8',
+            aspectRatio: isMobile ? '16 / 9' : '16 / 8',
 
             overflow: 'hidden',
 
-            marginBottom: '32px',
+            marginBottom: isMobile ? '20px' : '32px',
 
-            borderRadius: '18px',
+            borderRadius: isMobile ? '12px' : '18px',
 
             background: '#0f172a',
 
@@ -195,17 +200,17 @@ function ProjectDetailUI({
 
         <div
           style={{
-            marginBottom: '32px',
+            marginBottom: isMobile ? '20px' : '32px',
           }}
         >
 
           <div
             style={{
-              marginBottom: '12px',
+              marginBottom: isMobile ? '10px' : '12px',
 
               color: '#60a5fa',
 
-              fontSize: '13px',
+              fontSize: isMobile ? '11px' : '13px',
               fontWeight: 800,
 
               letterSpacing: '0.1em',
@@ -222,9 +227,9 @@ function ProjectDetailUI({
 
               color: '#cbd5e1',
 
-              fontSize: '17px',
+              fontSize: isMobile ? '14px' : '17px',
 
-              lineHeight: 1.8,
+              lineHeight: 1.6,
             }}
           >
             {project.description}
@@ -238,17 +243,17 @@ function ProjectDetailUI({
 
         <div
           style={{
-            marginBottom: '34px',
+            marginBottom: isMobile ? '24px' : '34px',
           }}
         >
 
           <div
             style={{
-              marginBottom: '13px',
+              marginBottom: isMobile ? '10px' : '13px',
 
               color: '#60a5fa',
 
-              fontSize: '13px',
+              fontSize: isMobile ? '11px' : '13px',
               fontWeight: 800,
 
               letterSpacing: '0.1em',
@@ -265,7 +270,7 @@ function ProjectDetailUI({
 
               flexWrap: 'wrap',
 
-              gap: '10px',
+              gap: isMobile ? '8px' : '10px',
             }}
           >
 
@@ -273,9 +278,9 @@ function ProjectDetailUI({
               <span
                 key={tech}
                 style={{
-                  padding: '9px 14px',
+                  padding: isMobile ? '7px 12px' : '9px 14px',
 
-                  borderRadius: '999px',
+                  borderRadius: isMobile ? '8px' : '999px',
 
                   background:
                     'rgba(37, 99, 235, 0.15)',
@@ -285,7 +290,7 @@ function ProjectDetailUI({
 
                   color: '#bfdbfe',
 
-                  fontSize: '14px',
+                  fontSize: isMobile ? '12px' : '14px',
                   fontWeight: 600,
                 }}
               >
@@ -307,7 +312,7 @@ function ProjectDetailUI({
 
             flexWrap: 'wrap',
 
-            gap: '12px',
+            gap: isMobile ? '10px' : '12px',
           }}
         >
 
@@ -319,9 +324,9 @@ function ProjectDetailUI({
               style={{
                 flex: 1,
 
-                minWidth: '220px',
+                minWidth: isMobile ? '140px' : '220px',
 
-                minHeight: '58px',
+                minHeight: isMobile ? '44px' : '58px',
 
                 display: 'flex',
                 alignItems: 'center',
@@ -329,7 +334,7 @@ function ProjectDetailUI({
 
                 boxSizing: 'border-box',
 
-                borderRadius: '12px',
+                borderRadius: isMobile ? '10px' : '12px',
 
                 background: '#2563eb',
 
@@ -337,14 +342,14 @@ function ProjectDetailUI({
 
                 textDecoration: 'none',
 
-                fontSize: '15px',
+                fontSize: isMobile ? '13px' : '15px',
                 fontWeight: 800,
 
                 boxShadow:
                   '0 10px 28px rgba(37, 99, 235, 0.3)',
               }}
             >
-              VIEW LIVE PROJECT
+              VIEW LIVE
             </a>
           )}
 
@@ -356,9 +361,9 @@ function ProjectDetailUI({
               style={{
                 flex: 1,
 
-                minWidth: '220px',
+                minWidth: isMobile ? '140px' : '220px',
 
-                minHeight: '58px',
+                minHeight: isMobile ? '44px' : '58px',
 
                 display: 'flex',
                 alignItems: 'center',
@@ -366,7 +371,7 @@ function ProjectDetailUI({
 
                 boxSizing: 'border-box',
 
-                borderRadius: '12px',
+                borderRadius: isMobile ? '10px' : '12px',
 
                 background:
                   'rgba(30, 41, 59, 0.8)',
@@ -378,7 +383,7 @@ function ProjectDetailUI({
 
                 textDecoration: 'none',
 
-                fontSize: '15px',
+                fontSize: isMobile ? '13px' : '15px',
                 fontWeight: 800,
               }}
             >

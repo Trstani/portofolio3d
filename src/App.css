@@ -365,29 +365,66 @@ select {
 @media (max-width: 700px) {
 
   .project-board-overlay {
-    padding: 15px;
+    padding: 12px;
   }
 
   .project-board-window {
-    max-height: 92vh;
+    max-height: calc(100dvh - 24px);
+    border-radius: 12px;
   }
 
   .project-board-header {
-    padding: 24px;
+    padding: 20px;
   }
 
   .project-board-header h1 {
-    font-size: 34px;
+    font-size: clamp(28px, 5vw, 36px);
+    margin-bottom: 8px;
+  }
+
+  .project-board-header p {
+    font-size: 13px;
+  }
+
+  .project-board-close {
+    padding: 8px 12px;
+    font-size: 10px;
   }
 
   .project-board-content {
-    padding: 22px 24px;
-
+    padding: 16px 20px;
     grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .project-card {
+    border-radius: 8px;
+  }
+
+  .project-card-image {
+    border-radius: 8px;
+    aspect-ratio: 16 / 10;
+  }
+
+  .project-card-info {
+    padding: 12px 2px 0;
+  }
+
+  .project-card-info h2 {
+    font-size: 18px;
+  }
+
+  .project-card-info span {
+    font-size: 9px;
+  }
+
+  .project-card-info small {
+    font-size: 11px;
   }
 
   .project-board-footer {
-    padding: 14px 24px;
+    padding: 12px 20px;
+    font-size: 9px;
   }
 
   .project-board-footer span:last-child {
@@ -496,4 +533,69 @@ canvas {
 .touch-interact-button:active {
   background: rgba(250, 204, 21, 0.95);
   transform: scale(0.96);
+}
+
+
+/* ============================================================
+   TOUCH CONTROLS RESPONSIVE (mobile < 480px)
+   ============================================================ */
+
+@media (max-width: 480px) {
+  .touch-joystick-base {
+    left: 16px;
+    bottom: 16px;
+    width: 120px;
+    height: 120px;
+  }
+
+  .touch-joystick-stick {
+    width: 50px;
+    height: 50px;
+  }
+
+  .touch-jump-button {
+    right: 20px;
+    bottom: 32px;
+    width: 72px;
+    height: 72px;
+    font-size: 12px;
+  }
+
+  .touch-interact-button {
+    right: 100px;
+    bottom: 40px;
+    width: 64px;
+    height: 64px;
+    font-size: 18px;
+  }
+}
+
+@media (max-width: 360px) {
+  .touch-joystick-base {
+    left: 12px;
+    bottom: 12px;
+    width: 100px;
+    height: 100px;
+  }
+
+  .touch-joystick-stick {
+    width: 40px;
+    height: 40px;
+  }
+
+  .touch-jump-button {
+    right: 12px;
+    bottom: 24px;
+    width: 64px;
+    height: 64px;
+    font-size: 11px;
+  }
+
+  .touch-interact-button {
+    right: 80px;
+    bottom: 32px;
+    width: 56px;
+    height: 56px;
+    font-size: 16px;
+  }
 }

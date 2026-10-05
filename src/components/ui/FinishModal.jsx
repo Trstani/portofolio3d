@@ -4,6 +4,8 @@ function FinishModal({
 }) {
   if (!open) return null
 
+  const isMobile = typeof window !== 'undefined' && window.innerWidth <= 700
+
   return (
     <div
       style={{
@@ -15,7 +17,7 @@ function FinishModal({
         alignItems: 'center',
         justifyContent: 'center',
 
-        padding: '40px',
+        padding: isMobile ? '12px' : '40px',
         boxSizing: 'border-box',
 
         background:
@@ -30,13 +32,13 @@ function FinishModal({
 
       <div
         style={{
-          width: 'min(850px, 100%)',
+          width: isMobile ? 'calc(100% - 0px)' : 'min(850px, 100%)',
 
-          padding: '64px 50px',
+          padding: isMobile ? '32px 24px' : '64px 50px',
 
           boxSizing: 'border-box',
 
-          borderRadius: '28px',
+          borderRadius: isMobile ? '16px' : '28px',
 
           background:
             'linear-gradient(145deg, #101f3d, #081329)',
@@ -55,7 +57,7 @@ function FinishModal({
 
         <div
           style={{
-            marginBottom: '14px',
+            marginBottom: isMobile ? '10px' : '14px',
 
             color: '#60a5fa',
 
@@ -143,17 +145,17 @@ function FinishModal({
           style={{
             width: '100%',
 
-            minHeight: '60px',
+            minHeight: isMobile ? '44px' : '60px',
 
             border: 'none',
 
-            borderRadius: '14px',
+            borderRadius: isMobile ? '10px' : '14px',
 
             background: '#2563eb',
 
             color: '#ffffff',
 
-            fontSize: '17px',
+            fontSize: isMobile ? '14px' : '17px',
 
             fontWeight: 800,
 

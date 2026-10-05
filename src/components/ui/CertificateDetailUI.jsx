@@ -32,6 +32,8 @@ function CertificateDetailUI({
     )
   }
 
+  const isMobile = typeof window !== 'undefined' && window.innerWidth <= 700
+
   return (
     <div
       style={{
@@ -43,7 +45,7 @@ function CertificateDetailUI({
         alignItems: 'center',
         justifyContent: 'center',
 
-        padding: '40px',
+        padding: isMobile ? '12px' : '40px',
         boxSizing: 'border-box',
 
         background:
@@ -61,17 +63,16 @@ function CertificateDetailUI({
 
       <div
         style={{
-          width: 'min(1000px, 100%)',
-          maxHeight:
-            'calc(100vh - 80px)',
+          width: isMobile ? 'calc(100% - 0px)' : 'min(1000px, 100%)',
+          maxHeight: isMobile ? 'calc(100dvh - 24px)' : 'calc(100vh - 80px)',
 
           overflowY: 'auto',
 
           boxSizing: 'border-box',
 
-          padding: '42px',
+          padding: isMobile ? '28px' : '42px',
 
-          borderRadius: '24px',
+          borderRadius: isMobile ? '16px' : '24px',
 
           background:
             'linear-gradient(145deg, #101f3d, #081329)',
@@ -96,21 +97,22 @@ function CertificateDetailUI({
             justifyContent: 'space-between',
             alignItems: 'flex-start',
 
-            gap: '30px',
+            gap: isMobile ? '16px' : '30px',
 
-            marginBottom: '30px',
+            marginBottom: isMobile ? '20px' : '30px',
+            flexWrap: isMobile ? 'wrap' : 'nowrap',
           }}
         >
 
-          <div>
+          <div style={{ flex: 1, minWidth: 0 }}>
 
             <div
               style={{
-                marginBottom: '10px',
+                marginBottom: isMobile ? '8px' : '10px',
 
                 color: '#60a5fa',
 
-                fontSize: '13px',
+                fontSize: isMobile ? '11px' : '13px',
                 fontWeight: 800,
 
                 letterSpacing: '0.16em',
@@ -128,8 +130,9 @@ function CertificateDetailUI({
 
                 color: '#ffffff',
 
-                fontSize:
-                  'clamp(38px, 5vw, 60px)',
+                fontSize: isMobile
+                  ? 'clamp(24px, 5.5vw, 38px)'
+                  : 'clamp(38px, 5vw, 60px)',
 
                 lineHeight: 1.05,
 
@@ -141,7 +144,7 @@ function CertificateDetailUI({
 
             <p
               style={{
-                margin: '12px 0 0',
+                margin: isMobile ? '8px 0 0' : '12px 0 0',
 
                 color: '#93c5fd',
 
@@ -162,24 +165,25 @@ function CertificateDetailUI({
             style={{
               flexShrink: 0,
 
-              padding: '11px 18px',
+              padding: isMobile ? '8px 12px' : '11px 18px',
 
               border:
                 '1px solid rgba(96, 165, 250, 0.35)',
 
-              borderRadius: '10px',
+              borderRadius: isMobile ? '8px' : '10px',
 
               background:
                 'rgba(37, 99, 235, 0.12)',
 
               color: '#bfdbfe',
 
-              fontSize: '12px',
+              fontSize: isMobile ? '10px' : '12px',
               fontWeight: 800,
 
               letterSpacing: '0.1em',
 
               cursor: 'pointer',
+              whiteSpace: 'nowrap',
             }}
           >
             BACK
@@ -195,7 +199,7 @@ function CertificateDetailUI({
           style={{
             width: '100%',
 
-            maxHeight: '55vh',
+            maxHeight: isMobile ? '40vh' : '55vh',
 
             display: 'flex',
             alignItems: 'center',
@@ -203,13 +207,13 @@ function CertificateDetailUI({
 
             overflow: 'hidden',
 
-            marginBottom: '32px',
+            marginBottom: isMobile ? '20px' : '32px',
 
-            padding: '18px',
+            padding: isMobile ? '12px' : '18px',
 
             boxSizing: 'border-box',
 
-            borderRadius: '18px',
+            borderRadius: isMobile ? '12px' : '18px',
 
             background:
               'rgba(15, 23, 42, 0.75)',
@@ -225,11 +229,11 @@ function CertificateDetailUI({
               display: 'block',
 
               width: '100%',
-              maxHeight: '50vh',
+              maxHeight: isMobile ? '38vh' : '50vh',
 
               objectFit: 'contain',
 
-              borderRadius: '10px',
+              borderRadius: isMobile ? '8px' : '10px',
             }}
           />
         </div>

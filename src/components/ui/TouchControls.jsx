@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react'
 import { touchInput, isTouchDevice } from '../../hooks/touchInput'
 import { addGlobalLog } from '../../hooks/useDebugLogger'
+import { getEGestureTracker } from '../../hooks/useEGestureTracker'
 
 const BASE_SIZE = 140
 const STICK_SIZE = 60
@@ -179,6 +180,11 @@ function InteractButton({ disabled }) {
   const handleDown = (e) => {
     const timestamp = performance.now()
     const ts = timestamp.toFixed(2)
+    
+    // Track E gesture to suppress accidental clicks on newly-mounted cards
+    const tracker = getEGestureTracker()
+    tracker.onEDown(e.pointerId)
+    
     console.log(`[${ts}] E pointerdown`, {
       pointerId: e.pointerId,
       currentTarget: e.currentTarget?.className,
@@ -207,13 +213,17 @@ function InteractButton({ disabled }) {
         const hasAfter = button.hasPointerCapture(e.pointerId)
         console.log(`[${ts}] E setPointerCapture SUCCESS`, {
           hasCaptureAfter: hasAfter,
+          pointerId: e.pointerId,
         })
         addGlobalLog(timestamp, 'E capture SUCCESS', {
           captureAfter: hasAfter,
+          pointerId: e.pointerId,
         })
       } catch (err) {
         console.error(`[${ts}] E setPointerCapture FAILED`, err)
-        addGlobalLog(timestamp, 'E capture FAILED', {})
+        addGlobalLog(timestamp, 'E capture FAILED', {
+          error: err.message,
+        })
         /* setPointerCapture may fail on some browsers/devices.
            E button still works without capture, just less safe. */
       }
@@ -225,6 +235,11 @@ function InteractButton({ disabled }) {
   const handleUp = (e) => {
     const timestamp = performance.now()
     const ts = timestamp.toFixed(2)
+    
+    // Call gesture tracker to log the end of the gesture
+    const tracker = getEGestureTracker()
+    tracker.onEUp()
+    
     console.log(`[${ts}] E pointerup`, {
       pointerId: e.pointerId,
       currentTarget: e.currentTarget?.className,

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { portfolio } from '../../data/portofolio'
 import { addGlobalLog } from '../../hooks/useDebugLogger'
+import { getEGestureTracker } from '../../hooks/useEGestureTracker'
 import ProjectDetailUI from './ProjectDetailUI'
 
 function ProjectBoardUI({
@@ -13,20 +14,38 @@ function ProjectBoardUI({
   useEffect(() => {
     const timestamp = performance.now()
     const ts = timestamp.toFixed(2)
-    console.log(`[${ts}] ProjectBoardUI MOUNT`)
-    addGlobalLog(timestamp, 'ProjectBoard MOUNT', {})
+    console.log(`[${ts}] ProjectBoardUI MOUNT`, {
+      selectedProject: selectedProject,
+      boardTitle: board?.title,
+    })
+    addGlobalLog(timestamp, 'ProjectBoard MOUNT', {
+      selectedProject: selectedProject?.id || 'null',
+    })
     return () => {
       const unmountTime = performance.now()
       const unmountTs = unmountTime.toFixed(2)
-      console.log(`[${unmountTs}] ProjectBoardUI UNMOUNT`)
-      addGlobalLog(unmountTime, 'ProjectBoard UNMOUNT', {})
+      console.log(`[${unmountTs}] ProjectBoardUI UNMOUNT`, {
+        selectedProject: selectedProject?.id || 'null',
+      })
+      addGlobalLog(unmountTime, 'ProjectBoard UNMOUNT', {
+        selectedProject: selectedProject?.id || 'null',
+      })
     }
   }, [])
 
-  console.log(
-  'SELECTED PROJECT:',
-  selectedProject
-)
+  // Log every selectedProject change
+  useEffect(() => {
+    const timestamp = performance.now()
+    const ts = timestamp.toFixed(2)
+    console.log(`[${ts}] selectedProject CHANGED`, {
+      newValue: selectedProject?.id || 'null',
+      newTitle: selectedProject?.title || 'none',
+      stackTrace: new Error().stack.split('\n').slice(0, 5).join('\n'),
+    })
+    addGlobalLog(timestamp, 'selectedProject CHANGED', {
+      newValue: selectedProject?.id || 'null',
+    })
+  }, [selectedProject])
 
   if (!board) return null
 
@@ -106,14 +125,51 @@ function ProjectBoardUI({
               onClick={() =>{
                 const timestamp = performance.now()
                 const ts = timestamp.toFixed(2)
+                
+                // Get gesture tracker state for detailed logging
+                const tracker = getEGestureTracker()
+                const trackerState = {
+                  activePointerId: tracker.activePointerId,
+                  suppress: tracker.suppress,
+                  suppressUntil: tracker.suppressUntil,
+                  shouldSuppress: tracker.shouldSuppressClick(),
+                  now: timestamp,
+                  timeUntilExpiry: Math.max(0, tracker.suppressUntil - timestamp),
+                }
+                
+                // Check if this click should be suppressed due to E gesture
+                const shouldSuppress = tracker.shouldSuppressClick()
+                
+                if (shouldSuppress) {
+                  console.log(`[${ts}] PROJECT CARD CLICK SUPPRESSED`, {
+                    projectId: project.id,
+                    projectTitle: project.title,
+                    reason: 'E gesture active',
+                    gestureState: trackerState,
+                  })
+                  addGlobalLog(timestamp, 'CARD CLICK SUPPRESSED', {
+                    projectId: project.id,
+                    gestureState: trackerState,
+                  })
+                  return
+                }
+                
                 console.log(`[${ts}] PROJECT CARD CLICK`, {
                   projectId: project.id,
                   projectName: project.title,
                   eventType: 'click',
+                  gestureState: trackerState,
                   timestamp: ts,
                 })
                 addGlobalLog(timestamp, 'CARD CLICK', {
                   projectId: project.id,
+                  gestureState: trackerState,
+                })
+                
+                // Log the setSelectedProject call
+                console.log(`[${ts}] CALLING setSelectedProject`, {
+                  projectId: project.id,
+                  projectTitle: project.title,
                 })
                 setSelectedProject(project)}
               }

@@ -3,6 +3,8 @@ import { portfolio } from '../../data/portofolio'
 function AboutModal({ open, onClose }) {
   if (!open) return null
 
+  const isMobile = typeof window !== 'undefined' && window.innerWidth <= 700
+
   return (
     <div
       style={{
@@ -14,7 +16,7 @@ function AboutModal({ open, onClose }) {
         alignItems: 'center',
         justifyContent: 'center',
 
-        padding: '40px',
+        padding: isMobile ? '12px' : '40px',
         boxSizing: 'border-box',
 
         background: 'rgba(2, 8, 23, 0.78)',
@@ -27,15 +29,15 @@ function AboutModal({ open, onClose }) {
     >
       <div
         style={{
-          width: 'min(850px, 100%)',
-          maxHeight: 'calc(100vh - 80px)',
+          width: isMobile ? 'calc(100% - 0px)' : 'min(850px, 100%)',
+          maxHeight: isMobile ? 'calc(100dvh - 24px)' : 'calc(100vh - 80px)',
           overflowY: 'auto',
 
           boxSizing: 'border-box',
 
-          padding: '44px',
+          padding: isMobile ? '28px' : '44px',
 
-          borderRadius: '24px',
+          borderRadius: isMobile ? '16px' : '24px',
 
           background:
             'linear-gradient(145deg, #101f3d, #081329)',
@@ -53,7 +55,7 @@ function AboutModal({ open, onClose }) {
 
         <div
           style={{
-            marginBottom: '32px',
+            marginBottom: isMobile ? '20px' : '32px',
           }}
         >
           <div
@@ -233,16 +235,16 @@ function AboutModal({ open, onClose }) {
           onClick={onClose}
           style={{
             width: '100%',
-            minHeight: '62px',
+            minHeight: isMobile ? '44px' : '62px',
 
             border: 'none',
-            borderRadius: '14px',
+            borderRadius: isMobile ? '10px' : '14px',
 
             background: '#2563eb',
 
             color: '#ffffff',
 
-            fontSize: '18px',
+            fontSize: isMobile ? '14px' : '18px',
             fontWeight: 800,
 
             cursor: 'pointer',

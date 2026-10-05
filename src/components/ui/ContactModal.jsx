@@ -1,0 +1,307 @@
+import { portfolio } from '../../data/portofolio'
+
+function ContactModal({ open, onClose }) {
+  if (!open) return null
+
+  const contact = portfolio.contact
+
+  return (
+    <div
+      style={{
+        position: 'fixed',
+        inset: 0,
+        zIndex: 999999,
+
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+
+        padding: '40px',
+        boxSizing: 'border-box',
+
+        background: 'rgba(2, 8, 23, 0.78)',
+
+        backdropFilter: 'blur(10px)',
+        WebkitBackdropFilter: 'blur(10px)',
+
+        fontFamily: 'Josefin Sans, sans-serif',
+      }}
+    >
+      <div
+        style={{
+          width: 'min(850px, 100%)',
+          maxHeight: 'calc(100vh - 80px)',
+          overflowY: 'auto',
+
+          boxSizing: 'border-box',
+
+          padding: '44px',
+
+          borderRadius: '24px',
+
+          background:
+            'linear-gradient(145deg, #101f3d, #081329)',
+
+          border:
+            '1px solid rgba(96, 165, 250, 0.4)',
+
+          boxShadow:
+            '0 35px 100px rgba(0, 0, 0, 0.65)',
+
+          color: '#e5edf9',
+        }}
+      >
+
+        {/* HEADER */}
+
+        <div
+          style={{
+            marginBottom: '32px',
+          }}
+        >
+          <div
+            style={{
+              marginBottom: '10px',
+
+              color: '#60a5fa',
+
+              fontSize: '13px',
+
+              fontWeight: 800,
+
+              letterSpacing: '0.16em',
+
+              textTransform: 'uppercase',
+            }}
+          >
+            Contact
+          </div>
+
+          <h1
+            style={{
+              margin: 0,
+
+              color: '#ffffff',
+
+              fontSize:
+                'clamp(42px, 6vw, 62px)',
+
+              lineHeight: 1,
+
+              fontWeight: 800,
+            }}
+          >
+            Let&apos;s Connect.
+          </h1>
+
+          <p
+            style={{
+              margin: '12px 0 0',
+
+              color: '#93c5fd',
+
+              fontSize: '19px',
+
+              fontWeight: 600,
+            }}
+          >
+            Get in touch with me
+          </p>
+        </div>
+
+        {/* INTRODUCTION */}
+
+        <p
+          style={{
+            margin: '0 0 30px',
+
+            color: '#cbd5e1',
+
+            fontSize: '17px',
+
+            lineHeight: 1.8,
+          }}
+        >
+          Feel free to reach out for
+          collaboration, opportunities,
+          or just to say hello.
+        </p>
+
+        {/* CONTACT INFORMATION */}
+
+        <div
+          style={{
+            display: 'grid',
+
+            gridTemplateColumns:
+              'repeat(auto-fit, minmax(260px, 1fr))',
+
+            gap: '16px',
+
+            marginBottom: '36px',
+          }}
+        >
+
+          {contact.email && (
+            <ContactCard
+              label="Email"
+              value={contact.email}
+              href={`mailto:${contact.email}`}
+            />
+          )}
+
+          {contact.phone && (
+            <ContactCard
+              label="Phone"
+              value={contact.phone}
+              href={`tel:${contact.phone}`}
+            />
+          )}
+
+          {contact.github && (
+            <ContactCard
+              label="GitHub"
+              value={contact.github}
+              href={contact.github}
+            />
+          )}
+
+          {contact.linkedin && (
+            <ContactCard
+              label="LinkedIn"
+              value={contact.linkedin}
+              href={contact.linkedin}
+            />
+          )}
+
+        </div>
+
+        {/* CLOSE */}
+
+        <button
+          type="button"
+          onClick={onClose}
+          style={{
+            width: '100%',
+
+            minHeight: '62px',
+
+            border: 'none',
+
+            borderRadius: '14px',
+
+            background: '#2563eb',
+
+            color: '#ffffff',
+
+            fontSize: '18px',
+
+            fontWeight: 800,
+
+            cursor: 'pointer',
+
+            boxShadow:
+              '0 10px 28px rgba(37, 99, 235, 0.35)',
+          }}
+        >
+          Close
+        </button>
+
+        <div
+          style={{
+            marginTop: '14px',
+
+            textAlign: 'center',
+
+            color: '#64748b',
+
+            fontSize: '13px',
+          }}
+        >
+          Press E near the contact area to open Contact
+        </div>
+
+      </div>
+    </div>
+  )
+}
+
+function ContactCard({
+  label,
+  value,
+  href,
+}) {
+  const isExternal =
+    href.startsWith('http')
+
+  return (
+    <a
+      href={href}
+      target={
+        isExternal
+          ? '_blank'
+          : undefined
+      }
+      rel={
+        isExternal
+          ? 'noreferrer'
+          : undefined
+      }
+      style={{
+        display: 'block',
+
+        padding: '22px 24px',
+
+        borderRadius: '16px',
+
+        background:
+          'rgba(30, 58, 138, 0.22)',
+
+        border:
+          '1px solid rgba(96, 165, 250, 0.16)',
+
+        textDecoration: 'none',
+
+        color: '#ffffff',
+
+        boxSizing: 'border-box',
+      }}
+    >
+      <div
+        style={{
+          marginBottom: '9px',
+
+          color: '#60a5fa',
+
+          fontSize: '13px',
+
+          fontWeight: 800,
+
+          letterSpacing: '0.1em',
+
+          textTransform: 'uppercase',
+        }}
+      >
+        {label}
+      </div>
+
+      <div
+        style={{
+          color: '#f8fafc',
+
+          fontSize: '17px',
+
+          fontWeight: 500,
+
+          lineHeight: 1.5,
+
+          wordBreak: 'break-word',
+        }}
+      >
+        {value}
+      </div>
+    </a>
+  )
+}
+
+export default ContactModal

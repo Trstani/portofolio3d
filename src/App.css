@@ -1,0 +1,499 @@
+@import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100..700;1,100..700&display=swap');
+
+/* =========================================================
+   GLOBAL
+   ========================================================= */
+
+* {
+  box-sizing: border-box;
+  font-family: 'Josefin Sans', sans-serif;
+}
+
+html,
+body,
+#root {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  overflow: hidden;
+}
+
+button,
+input,
+textarea,
+select {
+  font-family: 'Josefin Sans', sans-serif;
+}
+
+.app {
+  width: 100%;
+  height: 100%;
+  font-family: 'Josefin Sans', sans-serif;
+}
+
+
+/* =========================================================
+   PROJECT BOARD OVERLAY
+   ========================================================= */
+
+.project-board-overlay {
+  position: fixed;
+  inset: 0;
+
+  z-index: 100;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 40px;
+
+  background:
+    rgba(12, 15, 14, 0.72);
+
+  backdrop-filter: blur(8px);
+
+  font-family: 'Josefin Sans', sans-serif;
+}
+
+
+/* =========================================================
+   WINDOW
+   ========================================================= */
+
+.project-board-window {
+  width: min(1180px, 94vw);
+  max-height: 88vh;
+
+  display: flex;
+  flex-direction: column;
+
+  overflow: hidden;
+
+  background: #eee8dc;
+
+  border:
+    1px solid rgba(70, 65, 57, 0.25);
+
+  border-radius: 18px;
+
+  box-shadow:
+    0 30px 90px rgba(0, 0, 0, 0.45);
+}
+
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.project-board-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+
+  padding: 32px 38px 26px;
+
+  border-bottom:
+    1px solid rgba(70, 65, 57, 0.16);
+}
+
+.project-board-kicker {
+  display: block;
+
+  margin-bottom: 8px;
+
+  color: #777268;
+
+  font-size: 11px;
+  font-weight: 800;
+
+  letter-spacing: 0.18em;
+}
+
+.project-board-header h1 {
+  margin: 0;
+
+  color: #242622;
+
+  font-family: 'Josefin Sans', sans-serif;
+
+  font-size: clamp(32px, 4vw, 52px);
+
+  line-height: 1;
+  font-weight: 700;
+}
+
+.project-board-header p {
+  margin: 12px 0 0;
+
+  color: #706d65;
+
+  font-size: 14px;
+
+  line-height: 1.6;
+}
+
+
+/* =========================================================
+   CLOSE
+   ========================================================= */
+
+.project-board-close {
+  padding: 10px 14px;
+
+  border:
+    1px solid rgba(70, 65, 57, 0.25);
+
+  border-radius: 8px;
+
+  background: transparent;
+
+  color: #4f514c;
+
+  font-size: 11px;
+  font-weight: 800;
+
+  letter-spacing: 0.1em;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
+}
+
+.project-board-close:hover {
+  background: #292c29;
+
+  color: white;
+}
+
+
+/* =========================================================
+   CONTENT
+   ========================================================= */
+
+.project-board-content {
+  flex: 1;
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(
+      auto-fit,
+      minmax(220px, 1fr)
+    );
+
+  gap: 22px;
+
+  padding: 30px 38px;
+
+  overflow-y: auto;
+}
+
+
+/* =========================================================
+   PROJECT CARD
+   ========================================================= */
+
+.project-card {
+  padding: 0;
+
+  border: 0;
+
+  background: transparent;
+
+  text-align: left;
+
+  cursor: pointer;
+
+  color: inherit;
+
+  font-family: 'Josefin Sans', sans-serif;
+}
+
+.project-card-image {
+  position: relative;
+
+  aspect-ratio: 16 / 10;
+
+  overflow: hidden;
+
+  border-radius: 10px;
+
+  background: #d4cec1;
+
+  box-shadow:
+    0 8px 20px rgba(50, 45, 38, 0.16);
+
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.project-card-image img {
+  width: 100%;
+  height: 100%;
+
+  display: block;
+
+  object-fit: cover;
+
+  transition:
+    transform 0.35s ease;
+}
+
+.project-card:hover
+.project-card-image {
+  transform:
+    translateY(-5px)
+    rotate(-0.5deg);
+
+  box-shadow:
+    0 15px 32px rgba(50, 45, 38, 0.22);
+}
+
+.project-card:hover
+.project-card-image img {
+  transform: scale(1.04);
+}
+
+
+/* =========================================================
+   CARD INFO
+   ========================================================= */
+
+.project-card-info {
+  padding: 14px 3px 4px;
+}
+
+.project-card-info span {
+  display: block;
+
+  margin-bottom: 5px;
+
+  color: #888278;
+
+  font-size: 10px;
+  font-weight: 800;
+
+  letter-spacing: 0.12em;
+
+  text-transform: uppercase;
+}
+
+.project-card-info h2 {
+  margin: 0;
+
+  color: #272925;
+
+  font-family: 'Josefin Sans', sans-serif;
+
+  font-size: 23px;
+
+  font-weight: 700;
+
+  line-height: 1.2;
+}
+
+.project-card-info small {
+  display: block;
+
+  margin-top: 5px;
+
+  color: #77746c;
+
+  font-size: 12px;
+
+  line-height: 1.5;
+}
+
+
+/* =========================================================
+   FOOTER
+   ========================================================= */
+
+.project-board-footer {
+  display: flex;
+  justify-content: space-between;
+
+  padding: 15px 38px;
+
+  border-top:
+    1px solid rgba(70, 65, 57, 0.16);
+
+  color: #858078;
+
+  font-size: 10px;
+  font-weight: 800;
+
+  letter-spacing: 0.12em;
+}
+
+
+/* =========================================================
+   SCROLLBAR
+   ========================================================= */
+
+.project-board-content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.project-board-content::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.project-board-content::-webkit-scrollbar-thumb {
+  background: rgba(70, 65, 57, 0.25);
+
+  border-radius: 999px;
+}
+
+.project-board-content::-webkit-scrollbar-thumb:hover {
+  background: rgba(70, 65, 57, 0.4);
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 700px) {
+
+  .project-board-overlay {
+    padding: 15px;
+  }
+
+  .project-board-window {
+    max-height: 92vh;
+  }
+
+  .project-board-header {
+    padding: 24px;
+  }
+
+  .project-board-header h1 {
+    font-size: 34px;
+  }
+
+  .project-board-content {
+    padding: 22px 24px;
+
+    grid-template-columns: 1fr;
+  }
+
+  .project-board-footer {
+    padding: 14px 24px;
+  }
+
+  .project-board-footer span:last-child {
+    display: none;
+  }
+
+}
+
+/* ============================================================
+   TOUCH CONTROLS (mobile)
+   ============================================================ */
+
+/* Canvas jangan scroll/zoom saat disentuh */
+canvas {
+  touch-action: none;
+  display: block;
+}
+
+/* Container overlay — transparan ke touch */
+.touch-controls {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 10;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+
+/* ---------------- JOYSTICK ---------------- */
+
+.touch-joystick-base {
+  position: absolute;
+  left: 24px;
+  bottom: 24px;
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+  border: 2px solid rgba(96, 165, 250, 0.5);
+  pointer-events: auto;
+  touch-action: none;
+}
+
+.touch-joystick-stick {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: rgba(96, 165, 250, 0.75);
+  border: 2px solid rgba(255, 255, 255, 0.6);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+/* ---------------- JUMP ---------------- */
+
+.touch-jump-button {
+  position: absolute;
+  right: 32px;
+  bottom: 48px;
+  width: 88px;
+  height: 88px;
+  border-radius: 50%;
+  background: rgba(96, 165, 250, 0.7);
+  border: 2px solid rgba(255, 255, 255, 0.6);
+  color: #fff;
+  font-family: 'Josefin Sans', sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: 0.05em;
+  pointer-events: auto;
+  touch-action: none;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+.touch-jump-button:active {
+  background: rgba(96, 165, 250, 0.95);
+  transform: scale(0.96);
+}
+
+/* ---------------- INTERACT (E) ---------------- */
+
+.touch-interact-button {
+  position: absolute;
+  right: 136px;
+  bottom: 56px;
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: rgba(250, 204, 21, 0.75);
+  border: 2px solid rgba(255, 255, 255, 0.6);
+  color: #fff;
+  font-family: 'Josefin Sans', sans-serif;
+  font-weight: 700;
+  font-size: 22px;
+  letter-spacing: 0.05em;
+  pointer-events: auto;
+  touch-action: none;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+.touch-interact-button:active {
+  background: rgba(250, 204, 21, 0.95);
+  transform: scale(0.96);
+}

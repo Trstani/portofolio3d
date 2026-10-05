@@ -1,5 +1,6 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { portfolio } from '../../data/portofolio'
+import { addGlobalLog } from '../../hooks/useDebugLogger'
 import ProjectDetailUI from './ProjectDetailUI'
 
 function ProjectBoardUI({
@@ -9,12 +10,25 @@ function ProjectBoardUI({
   const [selectedProject, setSelectedProject] =
     useState(null)
 
-  if (!board) return null
+  useEffect(() => {
+    const timestamp = performance.now()
+    const ts = timestamp.toFixed(2)
+    console.log(`[${ts}] ProjectBoardUI MOUNT`)
+    addGlobalLog(timestamp, 'ProjectBoard MOUNT', {})
+    return () => {
+      const unmountTime = performance.now()
+      const unmountTs = unmountTime.toFixed(2)
+      console.log(`[${unmountTs}] ProjectBoardUI UNMOUNT`)
+      addGlobalLog(unmountTime, 'ProjectBoard UNMOUNT', {})
+    }
+  }, [])
 
   console.log(
   'SELECTED PROJECT:',
   selectedProject
 )
+
+  if (!board) return null
 
   const projects =
     board.projectIds
@@ -90,9 +104,51 @@ function ProjectBoardUI({
               key={project.id}
               className="project-card"
               onClick={() =>{
-                console.log('PROJECT CLICKED:', project)
-                    setSelectedProject(project)}
+                const timestamp = performance.now()
+                const ts = timestamp.toFixed(2)
+                console.log(`[${ts}] PROJECT CARD CLICK`, {
+                  projectId: project.id,
+                  projectName: project.title,
+                  eventType: 'click',
+                  timestamp: ts,
+                })
+                addGlobalLog(timestamp, 'CARD CLICK', {
+                  projectId: project.id,
+                })
+                setSelectedProject(project)}
               }
+              onPointerDown={(e) => {
+                const timestamp = performance.now()
+                const ts = timestamp.toFixed(2)
+                console.log(`[${ts}] PROJECT CARD POINTERDOWN`, {
+                  projectId: project.id,
+                  pointerId: e.pointerId,
+                  clientX: e.clientX,
+                  clientY: e.clientY,
+                  target: e.target?.className,
+                  currentTarget: e.currentTarget?.className,
+                })
+                addGlobalLog(timestamp, 'CARD POINTERDOWN', {
+                  projectId: project.id,
+                  pointerId: e.pointerId,
+                })
+              }}
+              onPointerUp={(e) => {
+                const timestamp = performance.now()
+                const ts = timestamp.toFixed(2)
+                console.log(`[${ts}] PROJECT CARD POINTERUP`, {
+                  projectId: project.id,
+                  pointerId: e.pointerId,
+                  clientX: e.clientX,
+                  clientY: e.clientY,
+                  target: e.target?.className,
+                  currentTarget: e.currentTarget?.className,
+                })
+                addGlobalLog(timestamp, 'CARD POINTERUP', {
+                  projectId: project.id,
+                  pointerId: e.pointerId,
+                })
+              }}
             >
 
               <div className="project-card-image">

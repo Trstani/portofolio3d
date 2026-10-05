@@ -7,6 +7,7 @@ import Player from './components/player/Player'
 import FollowCamera from './components/camera/FollowCamera'
 import CameraOcclusion from './components/camera/CameraOcculsion'
 import TouchControls from './components/ui/TouchControls'
+import DebugOverlay from './components/ui/DebugOverlay'
 
 import AboutInteraction from './components/ui/AboutInteraction'
 import CertificateInteraction from './components/ui/CertificateInteraction'
@@ -255,6 +256,8 @@ function App() {
         open={finishOpen}
         onClose={handleFinishClose}
       />
+
+      <DebugOverlay />
 
     </div>
   )

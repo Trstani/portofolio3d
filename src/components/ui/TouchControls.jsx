@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react'
 import { touchInput, isTouchDevice } from '../../hooks/touchInput'
+import { addGlobalLog } from '../../hooks/useDebugLogger'
 
 const BASE_SIZE = 140
 const STICK_SIZE = 60
@@ -51,9 +52,12 @@ function VirtualJoystick({ disabled }) {
   }
 
   const updateFromPointer = (clientX, clientY) => {
-    const base = baseRef.current.getBoundingClientRect()
-    const cx = base.left + base.width / 2
-    const cy = base.top + base.height / 2
+    const base = baseRef.current
+    if (!base) return
+
+    const rect = base.getBoundingClientRect()
+    const cx = rect.left + rect.width / 2
+    const cy = rect.top + rect.height / 2
 
     let dx = clientX - cx
     let dy = clientY - cy
@@ -80,8 +84,21 @@ function VirtualJoystick({ disabled }) {
   const handleDown = (e) => {
     if (disabled) return
     if (activeIdRef.current !== null) return
+
+    const base = baseRef.current
+    if (!base) return
+
     activeIdRef.current = e.pointerId
-    baseRef.current.setPointerCapture(e.pointerId)
+
+    /* Coba setPointerCapture secara aman.
+       Jika browser menolak atau throw exception, tetap lanjutkan.
+       Pointer capture adalah optimization, bukan requirement untuk joystick bekerja. */
+    try {
+      base.setPointerCapture(e.pointerId)
+    } catch {
+      /* setPointerCapture failed, tapi joystick masih bisa bergerak */
+    }
+
     updateFromPointer(e.clientX, e.clientY)
   }
 
@@ -96,6 +113,15 @@ function VirtualJoystick({ disabled }) {
     resetStick()
   }
 
+  const handleLostPointerCapture = (e) => {
+    /* Jika browser melepas pointer capture secara paksa,
+       reset state agar joystick tidak stuck. */
+    if (e.pointerId === activeIdRef.current) {
+      activeIdRef.current = null
+      resetStick()
+    }
+  }
+
   useEffect(() => {
     return () => resetStick()
   }, [])
@@ -108,6 +134,7 @@ function VirtualJoystick({ disabled }) {
       onPointerMove={handleMove}
       onPointerUp={handleUp}
       onPointerCancel={handleUp}
+      onLostPointerCapture={handleLostPointerCapture}
     >
       <div ref={stickRef} className="touch-joystick-stick" />
     </div>
@@ -147,39 +174,152 @@ function JumpButton({ disabled }) {
    ============================================================ */
 function InteractButton({ disabled }) {
   const pressedRef = useRef(false)
+  const buttonRef = useRef(null)
 
   const handleDown = (e) => {
+    const timestamp = performance.now()
+    const ts = timestamp.toFixed(2)
+    console.log(`[${ts}] E pointerdown`, {
+      pointerId: e.pointerId,
+      currentTarget: e.currentTarget?.className,
+      target: e.target?.className,
+      pressedRef: pressedRef.current,
+      disabled,
+      hasCaptureBefore: buttonRef.current?.hasPointerCapture(e.pointerId),
+    })
+    addGlobalLog(timestamp, 'E pointerdown', {
+      pointerId: e.pointerId,
+      captureBefore: buttonRef.current?.hasPointerCapture(e.pointerId),
+    })
+
     e.preventDefault()
     if (disabled) return
     if (pressedRef.current) return
     pressedRef.current = true
+
+    /* Capture pointer so pointerup events stay on this button
+       even if the modal renders over it. This prevents accidental
+       clicks on underlying UI elements (e.g., project cards). */
+    const button = buttonRef.current
+    if (button) {
+      try {
+        button.setPointerCapture(e.pointerId)
+        const hasAfter = button.hasPointerCapture(e.pointerId)
+        console.log(`[${ts}] E setPointerCapture SUCCESS`, {
+          hasCaptureAfter: hasAfter,
+        })
+        addGlobalLog(timestamp, 'E capture SUCCESS', {
+          captureAfter: hasAfter,
+        })
+      } catch (err) {
+        console.error(`[${ts}] E setPointerCapture FAILED`, err)
+        addGlobalLog(timestamp, 'E capture FAILED', {})
+        /* setPointerCapture may fail on some browsers/devices.
+           E button still works without capture, just less safe. */
+      }
+    }
+
     pressInteractKey()
   }
 
   const handleUp = (e) => {
+    const timestamp = performance.now()
+    const ts = timestamp.toFixed(2)
+    console.log(`[${ts}] E pointerup`, {
+      pointerId: e.pointerId,
+      currentTarget: e.currentTarget?.className,
+      target: e.target?.className,
+      pressedRef: pressedRef.current,
+      disabled,
+      hasCaptureBeforeRelease: buttonRef.current?.hasPointerCapture(e.pointerId),
+    })
+    addGlobalLog(timestamp, 'E pointerup', {
+      pointerId: e.pointerId,
+      captureBefore: buttonRef.current?.hasPointerCapture(e.pointerId),
+    })
+
     e.preventDefault()
     if (!pressedRef.current) return
+
+    /* Release pointer capture safely. */
+    const button = buttonRef.current
+    if (button) {
+      try {
+        button.releasePointerCapture(e.pointerId)
+        const hasAfter = button.hasPointerCapture(e.pointerId)
+        console.log(`[${ts}] E releasePointerCapture SUCCESS`, {
+          hasCaptureAfter: hasAfter,
+        })
+        addGlobalLog(timestamp, 'E release SUCCESS', {
+          captureAfter: hasAfter,
+        })
+      } catch (err) {
+        console.error(`[${ts}] E releasePointerCapture FAILED`, err)
+        addGlobalLog(timestamp, 'E release FAILED', {})
+        /* Release may fail, but doesn't break functionality. */
+      }
+    }
+
     pressedRef.current = false
     releaseInteractKey()
+  }
+
+  const handleLostPointerCapture = (e) => {
+    const timestamp = performance.now()
+    const ts = timestamp.toFixed(2)
+    console.log(`[${ts}] E lostpointercapture`, {
+      pointerId: e.pointerId,
+      pressedRef: pressedRef.current,
+    })
+    addGlobalLog(timestamp, 'E lostcapture', {
+      pointerId: e.pointerId,
+      pressed: pressedRef.current,
+    })
+    /* If browser releases pointer capture unexpectedly,
+       clean up state so KeyE doesn't remain stuck. */
+    if (pressedRef.current) {
+      pressedRef.current = false
+      releaseInteractKey()
+    }
   }
 
   /* Kalau `disabled` berubah jadi true saat tombol masih
      ditekan (misalnya modal terbuka di tengah tap), lepas
      key supaya tidak "nyangkut" true. */
   useEffect(() => {
+    const timestamp = performance.now()
+    const ts = timestamp.toFixed(2)
     if (disabled && pressedRef.current) {
+      console.log(`[${ts}] E disabled effect cleanup`, {
+        disabled,
+        pressedRef: pressedRef.current,
+      })
+      addGlobalLog(timestamp, 'E disabled cleanup', {
+        pressed: pressedRef.current,
+      })
       pressedRef.current = false
       releaseInteractKey()
+    } else if (disabled !== undefined) {
+      console.log(`[${ts}] E disabled changed`, {
+        disabled,
+        pressedRef: pressedRef.current,
+      })
+      addGlobalLog(timestamp, 'E disabled changed', {
+        disabled,
+        pressed: pressedRef.current,
+      })
     }
   }, [disabled])
 
   return (
     <button
+      ref={buttonRef}
       className="touch-interact-button"
       onPointerDown={handleDown}
       onPointerUp={handleUp}
       onPointerCancel={handleUp}
       onPointerLeave={handleUp}
+      onLostPointerCapture={handleLostPointerCapture}
       onContextMenu={(e) => e.preventDefault()}
     >
       E

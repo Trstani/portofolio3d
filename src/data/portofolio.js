@@ -73,7 +73,7 @@ export const portfolio = {
         'Laravel',
         'Blade',
       ],
-      demo: 'https://blog.create-eve.com/about',
+      demo: 'https://blog.create-eve.com',
       github: '',
     },
     {

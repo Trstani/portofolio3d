@@ -1,6 +1,5 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { portfolio } from '../../data/portofolio'
-import { addGlobalLog } from '../../hooks/useDebugLogger'
 import { getEGestureTracker } from '../../hooks/useEGestureTracker'
 import CertificateDetailUI from './CertificateDetailUI'
 
@@ -10,13 +9,8 @@ function CertificateRailUI({
 }) {
   const [selectedCertificate, setSelectedCertificate] =
     useState(null)
-    
+
   const isMobile = typeof window !== 'undefined' && window.innerWidth <= 700
-    
-  console.log(
-  'SELECTED CERTIFICATE:',
-  selectedCertificate
-)
 
   if (!rail) return null
 
@@ -217,31 +211,12 @@ function CertificateRailUI({
               type="button"
               key={certificate.id}
               onClick={() => {
-                const timestamp = performance.now()
-                const ts = timestamp.toFixed(2)
-                
-                // Check if this click should be suppressed due to E gesture
                 const tracker = getEGestureTracker()
-                const shouldSuppress = tracker.shouldSuppressClick()
                 
-                if (shouldSuppress) {
-                  console.log(`[${ts}] CERTIFICATE CLICK SUPPRESSED`, {
-                    certificateId: certificate.id,
-                    reason: 'E gesture active',
-                  })
-                  addGlobalLog(timestamp, 'CERT CLICK SUPPRESSED', {
-                    certificateId: certificate.id,
-                  })
+                if (tracker.shouldSuppressClick()) {
                   return
                 }
                 
-                console.log(`[${ts}] CERTIFICATE CLICKED`, {
-                  certificateId: certificate.id,
-                  certificateName: certificate.title,
-                })
-                addGlobalLog(timestamp, 'CERT CLICK', {
-                  certificateId: certificate.id,
-                })
                 setSelectedCertificate(
                   certificate
                 )

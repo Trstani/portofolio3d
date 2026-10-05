@@ -47,34 +47,15 @@ export function getEGestureTracker() {
     gestureActive: eGestureState.gestureActive,
     suppressUntil: eGestureState.suppressUntil,
     onEDown: (pointerId) => {
-      const ts = performance.now().toFixed(2)
       eGestureState.gestureActive = true
-      console.log(`[${ts}] GESTURE_TRACKER.onEDown`, {
-        pointerId,
-        gestureActive: eGestureState.gestureActive,
-      })
     },
     onEUp: () => {
-      const ts = performance.now().toFixed(2)
       eGestureState.gestureActive = false
       eGestureState.suppressUntil = performance.now() + SUPPRESS_WINDOW_MS
-      console.log(`[${ts}] GESTURE_TRACKER.onEUp`, {
-        suppressUntil: eGestureState.suppressUntil.toFixed(2),
-        suppressWindowMs: SUPPRESS_WINDOW_MS,
-        expiresAt: (eGestureState.suppressUntil - performance.now()).toFixed(2),
-      })
     },
     shouldSuppressClick: () => {
       const now = performance.now()
       const shouldSuppress = now <= eGestureState.suppressUntil
-      const ts = now.toFixed(2)
-      if (shouldSuppress) {
-        console.log(`[${ts}] shouldSuppressClick TRUE`, {
-          now: ts,
-          suppressUntil: eGestureState.suppressUntil.toFixed(2),
-          timeRemaining: (eGestureState.suppressUntil - now).toFixed(2),
-        })
-      }
       return shouldSuppress
     },
   }

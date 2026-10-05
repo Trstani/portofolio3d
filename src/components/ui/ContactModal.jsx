@@ -1,4 +1,5 @@
 import { portfolio } from '../../data/portofolio'
+import { getEGestureTracker } from '../../hooks/useEGestureTracker'
 
 function ContactModal({ open, onClose }) {
   if (!open) return null
@@ -181,7 +182,16 @@ function ContactModal({ open, onClose }) {
 
         <button
           type="button"
-          onClick={onClose}
+          onClick={(e) => {
+            // Check if this click should be suppressed due to E gesture
+            const tracker = getEGestureTracker()
+            if (tracker.shouldSuppressClick()) {
+              e.preventDefault()
+              return
+            }
+            
+            onClose()
+          }}
           style={{
             width: '100%',
 
@@ -235,9 +245,29 @@ function ContactCard({
   const isExternal =
     href.startsWith('http')
 
+  const handleContactCardClick = (e) => {
+    // Check if this click should be suppressed due to E gesture
+    const tracker = getEGestureTracker()
+    
+    if (tracker.shouldSuppressClick()) {
+      e.preventDefault()
+      e.stopPropagation()
+      return
+    }
+    
+    // Allow normal click behavior (navigation)
+  }
+
   return (
     <a
       href={href}
+      onClick={handleContactCardClick}
+      onPointerDown={(e) => {
+        // Pointer down on contact link
+      }}
+      onPointerUp={(e) => {
+        // Pointer up on contact link
+      }}
       target={
         isExternal
           ? '_blank'

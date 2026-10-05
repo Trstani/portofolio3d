@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react'
 import { portfolio } from '../../data/portofolio'
-import { addGlobalLog } from '../../hooks/useDebugLogger'
 import { getEGestureTracker } from '../../hooks/useEGestureTracker'
 import ProjectDetailUI from './ProjectDetailUI'
 
@@ -12,39 +11,14 @@ function ProjectBoardUI({
     useState(null)
 
   useEffect(() => {
-    const timestamp = performance.now()
-    const ts = timestamp.toFixed(2)
-    console.log(`[${ts}] ProjectBoardUI MOUNT`, {
-      selectedProject: selectedProject,
-      boardTitle: board?.title,
-    })
-    addGlobalLog(timestamp, 'ProjectBoard MOUNT', {
-      selectedProject: selectedProject?.id || 'null',
-    })
     return () => {
-      const unmountTime = performance.now()
-      const unmountTs = unmountTime.toFixed(2)
-      console.log(`[${unmountTs}] ProjectBoardUI UNMOUNT`, {
-        selectedProject: selectedProject?.id || 'null',
-      })
-      addGlobalLog(unmountTime, 'ProjectBoard UNMOUNT', {
-        selectedProject: selectedProject?.id || 'null',
-      })
+      // Component unmounting
     }
   }, [])
 
   // Log every selectedProject change
   useEffect(() => {
-    const timestamp = performance.now()
-    const ts = timestamp.toFixed(2)
-    console.log(`[${ts}] selectedProject CHANGED`, {
-      newValue: selectedProject?.id || 'null',
-      newTitle: selectedProject?.title || 'none',
-      stackTrace: new Error().stack.split('\n').slice(0, 5).join('\n'),
-    })
-    addGlobalLog(timestamp, 'selectedProject CHANGED', {
-      newValue: selectedProject?.id || 'null',
-    })
+    // selectedProject changed
   }, [selectedProject])
 
   if (!board) return null
@@ -123,87 +97,20 @@ function ProjectBoardUI({
               key={project.id}
               className="project-card"
               onClick={() =>{
-                const timestamp = performance.now()
-                const ts = timestamp.toFixed(2)
-                
-                // Get gesture tracker state for detailed logging
-                const tracker = getEGestureTracker()
-                const trackerState = {
-                  activePointerId: tracker.activePointerId,
-                  suppress: tracker.suppress,
-                  suppressUntil: tracker.suppressUntil,
-                  shouldSuppress: tracker.shouldSuppressClick(),
-                  now: timestamp,
-                  timeUntilExpiry: Math.max(0, tracker.suppressUntil - timestamp),
-                }
-                
                 // Check if this click should be suppressed due to E gesture
-                const shouldSuppress = tracker.shouldSuppressClick()
+                const tracker = getEGestureTracker()
                 
-                if (shouldSuppress) {
-                  console.log(`[${ts}] PROJECT CARD CLICK SUPPRESSED`, {
-                    projectId: project.id,
-                    projectTitle: project.title,
-                    reason: 'E gesture active',
-                    gestureState: trackerState,
-                  })
-                  addGlobalLog(timestamp, 'CARD CLICK SUPPRESSED', {
-                    projectId: project.id,
-                    gestureState: trackerState,
-                  })
+                if (tracker.shouldSuppressClick()) {
                   return
                 }
                 
-                console.log(`[${ts}] PROJECT CARD CLICK`, {
-                  projectId: project.id,
-                  projectName: project.title,
-                  eventType: 'click',
-                  gestureState: trackerState,
-                  timestamp: ts,
-                })
-                addGlobalLog(timestamp, 'CARD CLICK', {
-                  projectId: project.id,
-                  gestureState: trackerState,
-                })
-                
-                // Log the setSelectedProject call
-                console.log(`[${ts}] CALLING setSelectedProject`, {
-                  projectId: project.id,
-                  projectTitle: project.title,
-                })
                 setSelectedProject(project)}
               }
               onPointerDown={(e) => {
-                const timestamp = performance.now()
-                const ts = timestamp.toFixed(2)
-                console.log(`[${ts}] PROJECT CARD POINTERDOWN`, {
-                  projectId: project.id,
-                  pointerId: e.pointerId,
-                  clientX: e.clientX,
-                  clientY: e.clientY,
-                  target: e.target?.className,
-                  currentTarget: e.currentTarget?.className,
-                })
-                addGlobalLog(timestamp, 'CARD POINTERDOWN', {
-                  projectId: project.id,
-                  pointerId: e.pointerId,
-                })
+                // Pointer down on project card
               }}
               onPointerUp={(e) => {
-                const timestamp = performance.now()
-                const ts = timestamp.toFixed(2)
-                console.log(`[${ts}] PROJECT CARD POINTERUP`, {
-                  projectId: project.id,
-                  pointerId: e.pointerId,
-                  clientX: e.clientX,
-                  clientY: e.clientY,
-                  target: e.target?.className,
-                  currentTarget: e.currentTarget?.className,
-                })
-                addGlobalLog(timestamp, 'CARD POINTERUP', {
-                  projectId: project.id,
-                  pointerId: e.pointerId,
-                })
+                // Pointer up on project card
               }}
             >
 
